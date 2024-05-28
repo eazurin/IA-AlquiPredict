@@ -16,3 +16,10 @@ for column in data.columns:
     print(data[column].value_counts())
     print("*"*12)
 
+#Verificando la cantidad de registros que tienen algun campo faltante
+print(data.isna().sum())
+
+data=data.drop(columns=['Unnamed: 0', 'Piso de ubicación', 'Vista al exterior', 'Tipo de cambio',
+                        'Alquiler mensual en dólares corrientes', 'Alquiler mensual en soles constantes de 2009', 'Tipo de cambio', 'IPC'])
+
+print(data.describe())
