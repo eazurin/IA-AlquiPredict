@@ -22,4 +22,13 @@ print(data.isna().sum())
 data=data.drop(columns=['Unnamed: 0', 'Piso de ubicación', 'Vista al exterior', 'Tipo de cambio',
                         'Alquiler mensual en dólares corrientes', 'Alquiler mensual en soles constantes de 2009', 'Tipo de cambio', 'IPC'])
 
+# Rellenar valores faltantes en 'Años de antigüedad', 'Número de baños' y 'Número de garages' con la mediana
+data['Años de antigüedad'].fillna(data['Años de antigüedad'].median(), inplace=True)
+data['Número de baños'].fillna(data['Número de baños'].median(), inplace=True)
+data['Número de garages'].fillna(data['Número de garages'].median(), inplace=True)
+
 print(data.describe())
+data.to_csv('dataset_final.csv')
+# Separar características (X) y la variable objetivo (y)
+X = data.drop(columns=['Alquiler mensual en soles corrientes'])
+y = data['Alquiler mensual en soles corrientes']
