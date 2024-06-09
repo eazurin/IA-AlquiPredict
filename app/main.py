@@ -1,5 +1,9 @@
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
 
 #Leemos los datos con pandas
 data=pd.read_excel('bd_alquiler.xlsx')
@@ -42,17 +46,17 @@ data = data.dropna()
 X = data.drop(columns=['Alquiler mensual en soles corrientes'])
 y = data['Alquiler mensual en soles corrientes']
 
+# Escalar las características
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
 # Dividir los datos en conjuntos de entrenamiento y prueba
-from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Definir el modelo de Random Forest con un número específico de estimadores
+model = RandomForestRegressor(n_estimators=100, random_state=42)
 
-# Entrenar un modelo de regresión lineal (primera prueba para ver como se comporta la regresino lineal)
-from sklearn.linear_model import LinearRegression
-
-from sklearn.metrics import mean_squared_error
-
-model = LinearRegression()
+# Entrenar el modelo
 model.fit(X_train, y_train)
 
 # Evaluar el modelo
@@ -61,3 +65,7 @@ mse = mean_squared_error(y_test, y_pred)
 score = model.score(X_test, y_test)
 print(f'R^2 score: {score}')
 print(f'Mean Squared Error: {mse}')
+
+
+
+
