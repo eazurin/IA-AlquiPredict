@@ -4,11 +4,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
+import pickle
 
 #Leemos los datos con pandas
 data=pd.read_excel('bd_alquiler.xlsx')
 #Mostramos 5 registros como ejemplo
 #print(data.head())
+
 
 #Mirando informacion como el numero de filas y columnas de nuestra base de datos
 #print(data.shape)
@@ -39,7 +41,7 @@ data = pd.get_dummies(data, columns=['Distrito'], drop_first=True)
 # Identificar filas con valores NaN en cualquier columna
 # rows_with_nan = data[data.isnull().any(axis=1)]
 # print(rows_with_nan)
-# Eliminar filas con valores NaN
+# Eliminar filas con valores NaN    
 data = data.dropna()
 
 # Separar características (X) y la variable objetivo (y)
@@ -66,6 +68,9 @@ score = model.score(X_test, y_test)
 print(f'R^2 score: {score}')
 print(f'Mean Squared Error: {mse}')
 
+with open('scaler.pkl', 'wb') as scaler_file:
+    pickle.dump(scaler, scaler_file)
 
-
-
+# Guardar las columnas que se utilizaron para entrenar el modelo
+with open('columns.pkl', 'wb') as columns_file:
+    pickle.dump(X.columns.tolist(), columns_file)
