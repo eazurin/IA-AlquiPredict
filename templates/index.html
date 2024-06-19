@@ -144,6 +144,59 @@
     <footer>
         <p>&copy; 2024 House Price Prediction. All rights reserved.</p>
     </footer>
-    
+    <script>
+        function sendData() {
+            // Obtener los valores de los campos del formulario
+            const antiguedad = document.getElementById('antiguedad').value.trim();
+            const banos = document.getElementById('banos').value.trim();
+            const garages = document.getElementById('garages').value.trim();
+            const area_techada = document.getElementById('area_techada').value.trim();
+            const area_ocupada = document.getElementById('area_ocupada').value.trim();
+            const distrito = document.getElementById('distrito').value.trim();
+
+
+            // Crear un objeto con los datos del formulario
+            const jsonData = {};
+
+            // Verificar y agregar valores al objeto jsonData
+            if (antiguedad !== "") {
+                jsonData["Años de antigüedad"] = parseInt(antiguedad);
+            }
+            if (banos !== "") {
+                jsonData["Número de baños"] = parseInt(banos);
+            }
+            if (garages !== "") {
+                jsonData["Número de garages"] = parseInt(garages);
+            }
+            if (area_techada !== "") {
+                jsonData["Área techada"] = parseInt(area_techada);
+            }
+            if (area_ocupada !== "") {
+                jsonData["Área ocupada"] = parseInt(area_ocupada);
+            }
+
+            if (distrito !== ""){
+                jsonData["Distrito_" + distrito] = 1;
+            }
+
+            // Log jsonData para verificar antes de enviar
+            console.log("JSON Data:", jsonData);
+
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => response.text())
+        .then(data => {
+            const jsonData = JSON.parse(data); // Convertir la respuesta a objeto JSON si es necesario
+            const price = jsonData.predicted_rent; // Acceder a la propiedad predicted_rent
+            console.log("Predicted Rent:", price);
+            document.getElementById("predictedPrice").innerHTML = "Precio: S/. " + price;
+        });
+    }
+    </script>
 </body>
 </html>
