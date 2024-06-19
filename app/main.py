@@ -5,6 +5,33 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
 import pickle
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def visualizar_datos(data, y):
+    # Gráficos de dispersión
+    for column in data.columns:
+        if 'Distrito_' not in column:
+            plt.figure(figsize=(10, 6))
+            plt.scatter(data[column], y)
+            plt.title(f'Alquiler mensual vs {column}')
+            plt.xlabel(column)
+            plt.ylabel('Alquiler mensual en soles corrientes')
+            plt.grid(True)
+            plt.show()
+
+    # Histogramas
+    data.hist(bins=30, figsize=(20, 15))
+    plt.show()
+
+    # Matriz de correlación sin las columnas de distritos
+    data_without_districts = data.loc[:, ~data.columns.str.contains('Distrito_')]
+    plt.figure(figsize=(12, 8))
+    correlation_matrix = data_without_districts.corr()
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
+    plt.title('Matriz de Correlación')
+    plt.show()
+
 
 #Leemos los datos con pandas
 data=pd.read_excel('bd_alquiler.xlsx')
@@ -67,6 +94,9 @@ mse = mean_squared_error(y_test, y_pred)
 score = model.score(X_test, y_test)
 print(f'R^2 score: {score}')
 print(f'Mean Squared Error: {mse}')
+
+# Visualizar los datos
+#visualizar_datos(data, y)
 
 with open('scaler.pkl', 'wb') as scaler_file:
     pickle.dump(scaler, scaler_file)
